@@ -28,20 +28,20 @@ bool menu::init() {
     layer->addChild(background);
 
     auto startButton = menuButton::create("Start Game");
-    startButton->::menu::setPosition(visibleSize.width / 2, visibleSize.height / 2 - 50);
+    startButton->setPosition(Vec2(640,290));
     layer->addChild(startButton);
 
     auto settingsButton = menuButton::create("Settings");
-    settingsButton->::menu::setPosition(visibleSize.width / 2, visibleSize.height / 2 - 120);
+    settingsButton->setPosition(Vec2(640, 230));
     layer->addChild(settingsButton);
 
 
     auto helpButton = menuButton::create("Help");
-    helpButton->::menu::setPosition(visibleSize.width / 2, visibleSize.height / 2 -190);
+    helpButton->setPosition(Vec2(640, 170));
     layer->addChild(helpButton);
 
     auto quitButton = menuButton::create("Quit");
-    quitButton->::menu::setPosition(visibleSize.width / 2, visibleSize.height / 2 -260);
+    quitButton->setPosition(Vec2(640, 110));
     layer->addChild(quitButton);
 
 
