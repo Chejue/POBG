@@ -16,8 +16,10 @@ using namespace ui;
 
 class menuButton : public Button {
 public:
+
     virtual bool init();
     static Button* create(std::string text);
+    CREATE_FUNC(menuButton);
 
 private:
 

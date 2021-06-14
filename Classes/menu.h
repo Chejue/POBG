@@ -15,9 +15,15 @@ using namespace ui;
 
 class menu : public Scene {
 public:
-    CREATE_FUNC(menu);
-
+    static Scene *createMenuScene();
     virtual bool init();
+
+    void enterModeScene(Ref* sender);
+    void enterGameScene(Ref* sender);
+    void enterSettingsScene(Ref* sender);
+    void menuClose(Ref* sender);
+
+    CREATE_FUNC(menu);
 
 private:
 

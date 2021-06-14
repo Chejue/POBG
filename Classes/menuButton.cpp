@@ -19,7 +19,5 @@ Button* menuButton::create(std::string text) {
     menuButton->setTitleColor(Color3B::BLACK);
     menuButton->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
-
-
     return menuButton;
 }
