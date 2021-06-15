@@ -22,7 +22,7 @@ bool modeScene::init() {
 
     //background
 
-    auto background = Sprite::create("background.png");
+    auto background = Sprite::create("res//background.png");
     background->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     background->setPosition(origin);
     background->setContentSize(visibleSize);

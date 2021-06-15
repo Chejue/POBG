@@ -15,10 +15,9 @@ using namespace ui;
 
 class modeScene : public Scene {
 public:
+    static Scene *createModeScene();
 
     virtual bool init();
-
-    static Scene* createModeScene();
 
     CREATE_FUNC(modeScene);
 
