@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/6/8.
-//
+// Created by 冯天阳
 
 #include "mapLayer.h"
 

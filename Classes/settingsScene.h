@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/6/14.
-//
+// Created by 冯天阳
 
 #ifndef POBG_SETTINGSSCENE_H
 #define POBG_SETTINGSSCENE_H
@@ -23,9 +21,14 @@ public:
 
     void backToMenu(Ref *sender);
 
-    void soundOff(Ref *sender, CheckBox::EventType type, Slider *slider);
+    void soundOff(Ref *sender, CheckBox::EventType type, Slider *slider1, Slider *slider2, Slider *slider3);
 
-    void sliderChangesVolume(Ref *sender, Slider::EventType type);
+    void sliderChangesMenuVolume(Ref *sender, Slider::EventType type);
+
+    void sliderChangesGamingVolume(Ref *sender, Slider::EventType type);
+
+    void sliderChangesEffectsVolume(Ref *sender, Slider::EventType type);
+
 
 private:
 

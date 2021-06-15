@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/6/8.
-//
+// Created by 冯天阳
 
 #ifndef POBG_MODESCENE_H
 #define POBG_MODESCENE_H

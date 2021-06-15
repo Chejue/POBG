@@ -1,4 +1,4 @@
-// Created by ³ÂÆôÅô
+// Created by é™ˆå¯é¹
 
 #ifndef POBG_PLAYERDATE_H
 #define POBG_PLAYERDATE_H
@@ -7,31 +7,27 @@
 
 USING_NS_CC;
 
-/*½ÇÉ«*/
+/*è§’è‰²*/
 class Player : public cocos2d::Node
 {
 public:
-	Player(void) {};
-	~Player(void) {};
-	CREATE_FUNC(Player);
+    Player(void){};
+    ~Player(void){};
+    CREATE_FUNC(Player);
 
-	Sprite* sprite;
-	bool init();              //ÈËÎï³õÊ¼»¯
-	float direct[2] = {};         //ÈËÎï³¯Ïò×ø±ê
-	char directString1[30] = {};   //ÈËÎï³¯Ïò1
-	char directString2[30] = {};   //ÈËÎï³¯Ïò2
-	std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap;  //¼ÇÂ¼°´¼ü×´Ì¬ÊÇ·ñ°´ÏÂ
-	void update(float delta);
+    Sprite *sprite;
+    bool init();											//äººç‰©åˆå§‹åŒ–
+    float direct[2] = {};									//äººç‰©æœå‘åæ ‡
+    char directString1[30] = {};							//äººç‰©æœå‘1
+    char directString2[30] = {};							//äººç‰©æœå‘2
+    std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap; //è®°å½•æŒ‰é”®çŠ¶æ€æ˜¯å¦æŒ‰ä¸‹
+    void update(float delta);
 
 private:
-	Animate* getAnimation(const char* direction, const int iMax, const int F, const int times);       //ÈËÎïÒÆ¶¯¶¯»­
-	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);   // ¶¨Òå¼üÅÌ°´ÏÂÊÂ¼ş
-	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);  // ¶¨Òå¼üÅÌÌ§ÆğÊÂ¼ş
-	void onMouseMove(Event* event);                                    // ¶¨ÒåÊó±êÒÆ¶¯ÊÂ¼ş
-
+    Animate *getAnimation(const char *direction, const int iMax, const int F, const int times); //äººç‰©ç§»åŠ¨åŠ¨ç”»
+    void onKeyPressed(EventKeyboard::KeyCode keyCode, Event *event);							// å®šä¹‰é”®ç›˜æŒ‰ä¸‹äº‹ä»¶
+    void onKeyReleased(EventKeyboard::KeyCode keyCode, Event *event);							// å®šä¹‰é”®ç›˜æŠ¬èµ·äº‹ä»¶
+    void onMouseMove(Event *event);																// å®šä¹‰é¼ æ ‡ç§»åŠ¨äº‹ä»¶
 };
-
-
-
 
 #endif //POBG_PLAYERDATE_H
