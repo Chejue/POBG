@@ -16,9 +16,16 @@ using namespace ui;
 class settingsScene : public Scene {
 public:
     static Scene *createSettingsScene();
+
     virtual bool init();
 
     CREATE_FUNC(settingsScene);
+
+    void backToMenu(Ref *sender);
+
+    void soundOff(Ref *sender, CheckBox::EventType type, Slider *slider);
+
+    void sliderChangesVolume(Ref *sender, Slider::EventType type);
 
 private:
 

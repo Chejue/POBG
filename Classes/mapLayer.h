@@ -16,11 +16,11 @@ using namespace ui;
 
 class mapLayer : public Layer {
 public:
-    CREATE_FUNC(mapLayer);
+    static Layer *createMapLayer();
 
     virtual bool init();
 
-    static Layer* createMapLayer();
+    CREATE_FUNC(mapLayer);
 
 private:
 

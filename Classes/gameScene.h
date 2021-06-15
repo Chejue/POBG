@@ -16,6 +16,7 @@ using namespace ui;
 class gameScene : public Scene {
 public:
     static Scene *createGameScene();
+
     virtual bool init();
 
     CREATE_FUNC(gameScene);
