@@ -16,7 +16,7 @@ bool Player::init() {
     */
 
     sprite = Sprite::create("left back 1.png");
-    sprite->setPosition(Vec2(640, 290));
+    sprite->setPosition(Vec2(640, 260));
     sprite->setScale(0.8f);
     addChild(sprite);
 
@@ -77,8 +77,10 @@ void Player::update(float delta) {
     if (X == 0 && Y == 0)
         return;
 
+
     auto move = MoveTo::create(0.2, Vec2(sprite->getPositionX() + X, sprite->getPositionY() + Y));
     sprite->runAction(move);
+    //CCLOG("%f %f", sprite->getPositionX(), sprite->getPositionY());
 }
 
 // 定义键盘按下事件
@@ -127,3 +129,4 @@ void Player::onMouseMove(Event *event) {
     if (!keyMap[cocos2d::EventKeyboard::KeyCode::KEY_SPACE])
         sprite->runAction(getAnimation(directString1, 4, 1, 1));
 }
+

@@ -13,8 +13,6 @@ using namespace ui;
 
 class menu : public Scene {
 public:
-    static Scene *createMenuScene();
-
     virtual bool init();
 
     CREATE_FUNC(menu);

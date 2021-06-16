@@ -9,33 +9,44 @@
 USING_NS_CC;
 using namespace ui;
 
-Scene *settingsScene::createSettingsScene() {
-    return settingsScene::create();
-}
-
 bool settingsScene::init() {
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    auto backToMenuButton = Button::create("res//Normal_Button.png");
+    auto background = Sprite::create("res//backgroundOfSettings.png");
+    background->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    background->setPosition(origin);
+    background->setContentSize(visibleSize);
+    addChild(background);
+
+    auto backToMenuButton = Button::create("res//Normal_Button.png", "res//Selected_Button.png");
+    backToMenuButton->setTitleText("Back");
+    backToMenuButton->setTitleFontName("arial.ttf");
+    backToMenuButton->setTitleFontSize(26);
+    backToMenuButton->setTitleColor(Color3B::BLACK);
     backToMenuButton->addClickEventListener(CC_CALLBACK_1(settingsScene::backToMenu, this));
-    backToMenuButton->::settingsScene::setPosition(100, 600);
+    backToMenuButton->::settingsScene::setPosition(100, 650);
     addChild(backToMenuButton);
 
     auto soundOffLabel = Label::createWithTTF("Sound off", "fonts//arial.ttf", 24);
     soundOffLabel->setPosition(200, 500);
+    soundOffLabel->setColor(Color3B::BLACK);
     addChild(soundOffLabel);
 
     auto volumeControlLabel1 = Label::createWithTTF("BGM Volume", "fonts//arial.ttf", 24);
     volumeControlLabel1->setPosition(200, 400);
+    volumeControlLabel1->setColor(Color3B::BLACK);
     addChild(volumeControlLabel1);
 
     auto volumeControlLabel2 = Label::createWithTTF("Gaming Volume", "fonts//arial.ttf", 24);
     volumeControlLabel2->setPosition(200, 300);
+    volumeControlLabel2->setColor(Color3B::BLACK);
     addChild(volumeControlLabel2);
 
     auto volumeControlLabel3 = Label::createWithTTF("Effects Volume", "fonts//arial.ttf", 24);
     volumeControlLabel3->setPosition(200, 200);
+    volumeControlLabel3->setColor(Color3B::BLACK);
     addChild(volumeControlLabel3);
 
     auto bgmOfMenuVolumeSlider = Slider::create();
@@ -43,7 +54,7 @@ bool settingsScene::init() {
     bgmOfMenuVolumeSlider->loadSlidBallTextures("res//SliderNode_Normal.png", "res//SliderNode_Press.png",
                                                 "res//SliderNode_Disable.png");
     bgmOfMenuVolumeSlider->loadProgressBarTexture("res//Slider_PressBar.png");
-    bgmOfMenuVolumeSlider->::settingsScene::setPosition(500, 400);
+    bgmOfMenuVolumeSlider->::settingsScene::setPosition(450, 400);
     bgmOfMenuVolumeSlider->setPercent(settings::getInstance().backgroundAudioOfMenuVolume * 100);
     bgmOfMenuVolumeSlider->addEventListener(CC_CALLBACK_2(settingsScene::sliderChangesMenuVolume, this));
     addChild(bgmOfMenuVolumeSlider);
@@ -53,7 +64,7 @@ bool settingsScene::init() {
     bgmOfGamingVolumeSlider->loadSlidBallTextures("res//SliderNode_Normal.png", "res//SliderNode_Press.png",
                                                   "res//SliderNode_Disable.png");
     bgmOfGamingVolumeSlider->loadProgressBarTexture("res//Slider_PressBar.png");
-    bgmOfGamingVolumeSlider->::settingsScene::setPosition(500, 300);
+    bgmOfGamingVolumeSlider->::settingsScene::setPosition(450, 300);
     bgmOfGamingVolumeSlider->setPercent(settings::getInstance().backgroundAudioOfGamingVolume * 100);
     bgmOfGamingVolumeSlider->addEventListener(CC_CALLBACK_2(settingsScene::sliderChangesGamingVolume, this));
     addChild(bgmOfGamingVolumeSlider);
@@ -63,7 +74,7 @@ bool settingsScene::init() {
     effectsVolumeSlider->loadSlidBallTextures("res//SliderNode_Normal.png", "res//SliderNode_Press.png",
                                               "res//SliderNode_Disable.png");
     effectsVolumeSlider->loadProgressBarTexture("res//Slider_PressBar.png");
-    effectsVolumeSlider->::settingsScene::setPosition(500, 200);
+    effectsVolumeSlider->::settingsScene::setPosition(450, 200);
     effectsVolumeSlider->setPercent(settings::getInstance().effectsVolume * 100);
     effectsVolumeSlider->addEventListener(CC_CALLBACK_2(settingsScene::sliderChangesEffectsVolume, this));
     addChild(effectsVolumeSlider);
@@ -71,7 +82,7 @@ bool settingsScene::init() {
 
     auto soundOffCheckbox = CheckBox::create("res//check_box_background.png", "res//check_box_cross.png");
 
-    soundOffCheckbox->::settingsScene::setPosition(300, 500);
+    soundOffCheckbox->::settingsScene::setPosition(350, 500);
     soundOffCheckbox->addEventListener(
             CC_CALLBACK_2(settingsScene::soundOff, this, bgmOfMenuVolumeSlider, bgmOfGamingVolumeSlider,
                           effectsVolumeSlider));
@@ -86,7 +97,7 @@ void settingsScene::backToMenu(Ref *sender) {
         auto buttonClickedSound = AudioEngine::play2d("music//button_clicked.mp3", false);
         AudioEngine::setVolume(buttonClickedSound, settings::getInstance().effectsVolume);
     }
-    auto menuScene = menu::createMenuScene();
+    auto menuScene = menu::create();
     auto transitionScene = TransitionFade::create(0.5f, menuScene);
     Director::getInstance()->replaceScene(transitionScene);
 }

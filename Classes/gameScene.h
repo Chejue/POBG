@@ -8,16 +8,23 @@
 USING_NS_CC;
 
 #include "ui/CocosGUI.h"
+#include "playerData.h"
 
 using namespace ui;
 
 class gameScene : public Scene {
 public:
-    static Scene *createGameScene();
 
     virtual bool init();
 
     CREATE_FUNC(gameScene);
+
+    TMXTiledMap *map;
+    Node *player;
+
+    bool isCanReach(float x, float y);
+
+    void update(float delta);
 
 private:
 

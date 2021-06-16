@@ -28,7 +28,3 @@ bool modeScene::init() {
 
     return Scene::init();
 }
-
-Scene *modeScene::createModeScene() {
-    return modeScene::create();
-}

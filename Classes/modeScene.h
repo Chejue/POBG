@@ -13,7 +13,6 @@ using namespace ui;
 
 class modeScene : public Scene {
 public:
-    static Scene *createModeScene();
 
     virtual bool init();
 
