@@ -1,46 +1,62 @@
 // Created by 陈启鹏
 
 #include "playerData.h"
+#include "bulletData.h"
 
 USING_NS_CC;
 
 bool Player::init()
 {
-    
-    /* 降落动画，未完成
-        
-        sprite = Sprite::create("player fall.png");
-        sprite->setPosition(Vec2(640, 600));
-        sprite->setScale(0.8f);
+    /* opening falling animation */
+    fallSprite = Sprite::create("player fall.png");
+    fallSprite->setPosition(Vec2(640, 600));
+    fallSprite->setScale(0.8f);
 
-        auto fall = MoveTo::create(3.0f, Vec2(640, 290));
-    */
+    auto fallDownFunc = [&]() 
+    {
+        isFall = false;
+        removeChild(fallSprite);
+    };
+    auto fallDown = CallFunc::create(fallDownFunc);
+    auto fall = MoveTo::create(3.0f, Vec2(640, 350));
+    Action* falling = Sequence::create(fall, fallDown, NULL);
+    this->addChild(fallSprite);
+    fallSprite->runAction(falling);
 
-    sprite = Sprite::create("left back 1.png");
-    sprite->setPosition(Vec2(640, 290));
+
+    sprite = Sprite::create("right back 1.png");
+    sprite->setPosition(Vec2(640, 260));
     sprite->setScale(0.8f);
     addChild(sprite);
 
-    /* 键盘事件监听 */
+    /* Keyboard Listener */
     auto keyListener = EventListenerKeyboard::create();
     keyListener->onKeyPressed = CC_CALLBACK_2(Player::onKeyPressed, this);
     keyListener->onKeyReleased = CC_CALLBACK_2(Player::onKeyReleased, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyListener, this);
 
-    /* 鼠标事件监听 */
+    /* Mouse Listener */
     auto mouseListener = EventListenerMouse::create();
     mouseListener->onMouseMove = CC_CALLBACK_1(Player::onMouseMove, this);
+    mouseListener->onMouseDown = CC_CALLBACK_1(Player::onMouseDown, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
+
+    for (int i = 0; i < 30; i++)
+    {
+        playerBullet[i] = Bullet::create();
+        playerBullet[i]->bulletInit(Vec2(0, 0));
+        addChild(playerBullet[i]);
+    }
 
     this->scheduleUpdate();
 
     return true;
 }
 
-/* 获取人物移动动画 */
+/* Gain the player's moving animation */
 Animate* Player::getAnimation(const char* direction, const int iMax, const int F,const int times)
 {
-    /* 动画图储存 */
+    /* save animation's picture */
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("player.plist");
     Vector<SpriteFrame*> frameArray;
     char str[100];
@@ -51,7 +67,7 @@ Animate* Player::getAnimation(const char* direction, const int iMax, const int F
         frameArray.pushBack(frame);
     }
 
-    /* 动画设置 */
+    /* sit animate */
     Animation* animation = Animation::createWithSpriteFrames(frameArray);
     animation->setLoops(times);
     animation->setDelayPerUnit(0.1f / F);
@@ -61,7 +77,12 @@ Animate* Player::getAnimation(const char* direction, const int iMax, const int F
 
 void Player::update(float delta)
 {
-    /* 键盘控制移动事件 */
+    if (isFall)
+        sprite->setVisible(false);
+    else
+        sprite->setVisible(true);
+
+    /* using keyboard to control player's moving */
     auto A = cocos2d::EventKeyboard::KeyCode::KEY_A;
     auto S = cocos2d::EventKeyboard::KeyCode::KEY_S;
     auto D = cocos2d::EventKeyboard::KeyCode::KEY_D;
@@ -85,14 +106,22 @@ void Player::update(float delta)
     auto move = MoveTo::create(0.2, Vec2(sprite->getPositionX() + X, sprite->getPositionY() + Y));
     sprite->runAction(move);
 
+    for (int i = 0; i < 30; i++)
+    {
+        if (playerBullet[i]->isActive == true)
+        {
+            //playerBullet[i]->isActive == false;
+        }
+    }
 }
 
-// 定义键盘按下事件
 void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) 
 {
     keyMap[keyCode] = true;
-    if (keyCode == EventKeyboard::KeyCode::KEY_SPACE)
+    if (keyCode == EventKeyboard::KeyCode::KEY_SPACE && canRoll)
     {
+        canRoll = false;
+        sprite->stopAllActions();
         auto roll = MoveTo::create(0.2, Vec2(sprite->getPositionX() + direct[0], sprite->getPositionY() + direct[1]));
         auto rollAct = getAnimation(directString2, 8, 2, 1);
         Spawn* spawn = Spawn::create(roll, rollAct, nullptr);
@@ -100,18 +129,16 @@ void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
     }
 }
 
-/* 定义键盘抬起事件 */
 void Player::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
 {
     keyMap[keyCode] = false;
 }
 
-/* 定义鼠标移动事件 */
 void Player::onMouseMove(Event* event)
 {
     EventMouse* e = (EventMouse*)event;
 
-    //获取人物朝向
+    /* gain direction */
     float xDir = e->getCursorX() - sprite->getPositionX();
     float yDir = e->getCursorY() - sprite->getPositionY();
     direct[0] = 150.0f * (xDir / sqrt(xDir * xDir + yDir * yDir));
@@ -137,7 +164,26 @@ void Player::onMouseMove(Event* event)
         sprintf_s(directString2, "leftf roll");
     }
 
-    /* 获取朝向动画 */
+    /* gain direction's animation */
     if (!keyMap[cocos2d::EventKeyboard::KeyCode::KEY_SPACE])
-        sprite->runAction(getAnimation(directString1, 4, 1, 1));
+        sprite->runAction(getAnimation(directString1, 5, 1, -1));
+}
+
+void Player::onMouseDown(Event* event)
+{
+    EventMouse* e = (EventMouse*)event;
+    
+    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            if (playerBullet[i]->isActive == false)
+            {
+                playerBullet[i]->isActive = true;
+                playerBullet[i]->shoot(sprite->getPosition(), direct, 0.5);
+
+                break;
+            }
+        }  
+    }
 }
