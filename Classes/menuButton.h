@@ -16,13 +16,14 @@ class menuButton : public Button {
 public:
 
     virtual bool init();
-    static Button* create(std::string text);
+
+    static Button *create(std::string text);
+
     CREATE_FUNC(menuButton);
 
 private:
 
 };
-
 
 
 #endif //POBG_MENUBUTTON_H

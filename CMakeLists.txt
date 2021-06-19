@@ -118,7 +118,7 @@ endif()
 set(all_code_files
     ${GAME_HEADER}
     ${GAME_SOURCE}
-        Classes/menu.cpp Classes/menu.h Classes/menuButton.cpp Classes/menuButton.h Classes/modeScene.cpp Classes/modeScene.h Classes/gameScene.cpp Classes/gameScene.h Classes/settingsScene.cpp Classes/settingsScene.h Classes/settings.cpp Classes/settings.h Classes/playerData.cpp Classes/playerData.h Classes/gunData.cpp Classes/gunData.h Classes/bulletData.cpp Classes/bulletData.h)
+        Classes/menu.cpp Classes/menu.h Classes/menuButton.cpp Classes/menuButton.h Classes/modeScene.cpp Classes/modeScene.h Classes/gameScene.cpp Classes/gameScene.h Classes/settingsScene.cpp Classes/settingsScene.h Classes/settings.cpp Classes/settings.h Classes/playerData.cpp Classes/playerData.h Classes/gunData.cpp Classes/gunData.h Classes/bulletData.cpp Classes/bulletData.h Classes/pauseLayer.cpp Classes/pauseLayer.h)
 if(NOT ANDROID)
     add_executable(${APP_NAME} ${all_code_files})
 else()

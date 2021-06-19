@@ -26,6 +26,8 @@ public:
 
     void update(float delta);
 
+    void doPause();
+
 private:
 
 };

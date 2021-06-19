@@ -85,7 +85,7 @@ void menu::enterSettingsScene(Ref *sender) {
     }
     auto settingsScene = settingsScene::create();
     auto transitionScene = TransitionFade::create(0.5f, settingsScene);
-    Director::getInstance()->replaceScene(transitionScene);
+    Director::getInstance()->pushScene(transitionScene);
 }
 
 void menu::menuClose(Ref *sender) {

@@ -25,7 +25,7 @@ bool settingsScene::init() {
     backToMenuButton->setTitleFontName("arial.ttf");
     backToMenuButton->setTitleFontSize(26);
     backToMenuButton->setTitleColor(Color3B::BLACK);
-    backToMenuButton->addClickEventListener(CC_CALLBACK_1(settingsScene::backToMenu, this));
+    backToMenuButton->addClickEventListener(CC_CALLBACK_1(settingsScene::back, this));
     backToMenuButton->::settingsScene::setPosition(100, 650);
     addChild(backToMenuButton);
 
@@ -92,14 +92,12 @@ bool settingsScene::init() {
     return Scene::init();
 }
 
-void settingsScene::backToMenu(Ref *sender) {
+void settingsScene::back(Ref *sender) {
     if (!settings::getInstance().silenced) {
         auto buttonClickedSound = AudioEngine::play2d("music//button_clicked.mp3", false);
         AudioEngine::setVolume(buttonClickedSound, settings::getInstance().effectsVolume);
     }
-    auto menuScene = menu::create();
-    auto transitionScene = TransitionFade::create(0.5f, menuScene);
-    Director::getInstance()->replaceScene(transitionScene);
+    Director::getInstance()->popScene();
 }
 
 void settingsScene::soundOff(Ref *sender, CheckBox::EventType type, Slider *slider1, Slider *slider2, Slider *slider3) {

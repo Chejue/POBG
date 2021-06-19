@@ -18,7 +18,7 @@ public:
 
     CREATE_FUNC(settingsScene);
 
-    void backToMenu(Ref *sender);
+    void back(Ref *sender);
 
     void soundOff(Ref *sender, CheckBox::EventType type, Slider *slider1, Slider *slider2, Slider *slider3);
 
