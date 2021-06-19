@@ -122,9 +122,16 @@ void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
     {
         canRoll = false;
         sprite->stopAllActions();
-        auto roll = MoveTo::create(0.2, Vec2(sprite->getPositionX() + direct[0], sprite->getPositionY() + direct[1]));
+        auto progressFromTo = ProgressFromTo::create(3, 100, 0);
+        auto rollFunc = [&]()
+        {
+            canRoll = true;
+        };
+        auto rollfunc = CallFunc::create(rollFunc);
+        auto sequence = Sequence::create(progressFromTo, rollfunc, nullptr);
+        auto rollTo = MoveTo::create(0.2, Vec2(sprite->getPositionX() + direct[0], sprite->getPositionY() + direct[1]));
         auto rollAct = getAnimation(directString2, 8, 2, 1);
-        Spawn* spawn = Spawn::create(roll, rollAct, nullptr);
+        Spawn* spawn = Spawn::create(rollTo, rollAct, sequence, nullptr);
         sprite->runAction(spawn);
     }
 }
