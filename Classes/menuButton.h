@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/5/24.
-//
+// Created by 冯天阳
 
 #ifndef POBG_MENUBUTTON_H
 #define POBG_MENUBUTTON_H

@@ -1,5 +1,3 @@
-//
-// Created by 冯天阳 on 2021/6/15.
-//
+// Created by 冯天阳
 
 #include "settings.h"

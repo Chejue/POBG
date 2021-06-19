@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/6/14.
-//
+// Created by 冯天阳
 
 #ifndef POBG_GAMESCENE_H
 #define POBG_GAMESCENE_H
@@ -10,16 +8,23 @@
 USING_NS_CC;
 
 #include "ui/CocosGUI.h"
+#include "playerData.h"
 
 using namespace ui;
 
 class gameScene : public Scene {
 public:
-    static Scene *createGameScene();
 
     virtual bool init();
 
     CREATE_FUNC(gameScene);
+
+    TMXTiledMap *map;
+    Player *player;
+
+    bool isCanReach(float x, float y);
+
+    void update(float delta);
 
 private:
 
