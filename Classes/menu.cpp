@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/5/14.
-//
+// Created by 冯天阳
 
 #include "menu.h"
 #include "menuButton.h"
@@ -14,25 +12,27 @@ USING_NS_CC;
 
 bool menu::init() {
 
-    auto backgroundAudioID = AudioEngine::play2d("music//test.mp3", true);
-    settings::getInstance().backgroundAudioID = backgroundAudioID;
-    settings::getInstance().backgroundAudioVolume = 1.0f;
+    if (!settings::getInstance().bgmOfMenu_started) {
+        auto backgroundAudioOfMenuID = AudioEngine::play2d("music//bgmOfMenu.mp3", true);
+        AudioEngine::setVolume(backgroundAudioOfMenuID, settings::getInstance().backgroundAudioOfMenuVolume);
+        settings::getInstance().backgroundAudioOfMenuID = backgroundAudioOfMenuID;
+        settings::getInstance().bgmOfMenu_started = true;
+    }
 
     //get visibleSize
     auto visibleSize = Director::getInstance()->getVisibleSize();
-    auto frameSize = Director::getInstance()->getOpenGLView()->getFrameSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     //create layer
 
-    auto layer = LayerColor::create(Color4B::WHITE);
+    auto layer = LayerColor::create();
     layer->setPosition(origin);
     layer->setContentSize(visibleSize);
     addChild(layer);
 
     //background
 
-    auto background = Sprite::create("res//background.png");
+    auto background = Sprite::create("res//backgroundOfMenu.png");
     background->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     background->setPosition(origin);
     background->setContentSize(visibleSize);
@@ -58,30 +58,38 @@ bool menu::init() {
     return Scene::init();
 }
 
-Scene *menu::createMenuScene() {
-
-    return menu::create();
-}
-
 void menu::enterModeScene(Ref *sender) {
-    auto modeScene = modeScene::createModeScene();
+    if (!settings::getInstance().silenced) {
+        auto buttonClickedSound = AudioEngine::play2d("music//button_clicked.mp3", false);
+        AudioEngine::setVolume(buttonClickedSound, settings::getInstance().effectsVolume);
+    }
+    auto modeScene = modeScene::create();
     auto transitionScene = TransitionFade::create(0.5f, modeScene);
     Director::getInstance()->replaceScene(transitionScene);
 }
 
 void menu::enterGameScene(Ref *sender) {
-    auto gameScene = gameScene::createGameScene();
+    if (!settings::getInstance().silenced) {
+        auto buttonClickedSound = AudioEngine::play2d("music//button_clicked.mp3", false);
+        AudioEngine::setVolume(buttonClickedSound, settings::getInstance().effectsVolume);
+    }
+    auto gameScene = gameScene::create();
     auto transitionScene = TransitionFade::create(0.5f, gameScene);
     Director::getInstance()->replaceScene(transitionScene);
 }
 
 void menu::enterSettingsScene(Ref *sender) {
-    auto settingsScene = settingsScene::createSettingsScene();
+    if (!settings::getInstance().silenced) {
+        auto buttonClickedSound = AudioEngine::play2d("music//button_clicked.mp3", false);
+        AudioEngine::setVolume(buttonClickedSound, settings::getInstance().effectsVolume);
+    }
+    auto settingsScene = settingsScene::create();
     auto transitionScene = TransitionFade::create(0.5f, settingsScene);
-    Director::getInstance()->replaceScene(settingsScene);
+    Director::getInstance()->replaceScene(transitionScene);
 }
 
 void menu::menuClose(Ref *sender) {
+    auto buttonClickedSound = AudioEngine::play2d("music//button_clicked.mp3", false);
     Director::getInstance()->end();
 }
 

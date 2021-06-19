@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/5/24.
-//
+// Created by 冯天阳
 
 #include "menuButton.h"
 

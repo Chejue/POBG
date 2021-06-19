@@ -1,6 +1,4 @@
-//
-// Created by 冯天阳 on 2021/6/8.
-//
+// Created by 冯天阳
 
 #include "modeScene.h"
 #include "menuButton.h"
@@ -29,8 +27,4 @@ bool modeScene::init() {
     layer->addChild(background);
 
     return Scene::init();
-}
-
-Scene *modeScene::createModeScene() {
-    return modeScene::create();
 }
