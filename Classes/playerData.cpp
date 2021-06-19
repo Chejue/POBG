@@ -1,7 +1,7 @@
 // Created by ³ÂÆôÅô
 
 #include "playerData.h"
-#include "bulletData.h"
+#include "gunData.h"
 
 USING_NS_CC;
 
@@ -10,23 +10,22 @@ bool Player::init()
     /* opening falling animation */
     fallSprite = Sprite::create("player fall.png");
     fallSprite->setPosition(Vec2(640, 600));
-    fallSprite->setScale(0.8f);
+    fallSprite->setScale(0.5f);
 
-    auto fallDownFunc = [&]() 
-    {
+    auto fallDownFunc = [&]() {
         isFall = false;
         removeChild(fallSprite);
     };
     auto fallDown = CallFunc::create(fallDownFunc);
-    auto fall = MoveTo::create(3.0f, Vec2(640, 350));
+    auto fall = MoveTo::create(2.7f, Vec2(640, 330));
     Action* falling = Sequence::create(fall, fallDown, NULL);
     this->addChild(fallSprite);
     fallSprite->runAction(falling);
 
-
     sprite = Sprite::create("right back 1.png");
     sprite->setPosition(Vec2(640, 260));
-    sprite->setScale(0.8f);
+    sprite->setScale(0.5f);
+    sprite->setVisible(false);
     addChild(sprite);
 
     /* Keyboard Listener */
@@ -41,11 +40,15 @@ bool Player::init()
     mouseListener->onMouseDown = CC_CALLBACK_1(Player::onMouseDown, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
 
-    for (int i = 0; i < 30; i++)
+    gun = Gun::create();
+    gun->pistolInit(sprite->getPosition());
+    addChild(gun);
+
+    for (int i = 0; i < PISTOL_BULLET; i++)
     {
-        playerBullet[i] = Bullet::create();
-        playerBullet[i]->bulletInit(Vec2(0, 0));
-        addChild(playerBullet[i]);
+        pistolBullet[i] = Bullet::create();
+        pistolBullet[i]->bulletInit(Vec2(0, 0));
+        addChild(pistolBullet[i]);
     }
 
     this->scheduleUpdate();
@@ -77,11 +80,11 @@ Animate* Player::getAnimation(const char* direction, const int iMax, const int F
 
 void Player::update(float delta)
 {
-    if (isFall)
-        sprite->setVisible(false);
-    else
+    if (!isFall)
+    {
         sprite->setVisible(true);
-
+        gun->setPosition(sprite->getPosition(), direct);
+    }
     /* using keyboard to control player's moving */
     auto A = cocos2d::EventKeyboard::KeyCode::KEY_A;
     auto S = cocos2d::EventKeyboard::KeyCode::KEY_S;
@@ -105,14 +108,6 @@ void Player::update(float delta)
 
     auto move = MoveTo::create(0.2, Vec2(sprite->getPositionX() + X, sprite->getPositionY() + Y));
     sprite->runAction(move);
-
-    for (int i = 0; i < 30; i++)
-    {
-        if (playerBullet[i]->isActive == true)
-        {
-            //playerBullet[i]->isActive == false;
-        }
-    }
 }
 
 void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) 
@@ -123,8 +118,7 @@ void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
         canRoll = false;
         sprite->stopAllActions();
         auto progressFromTo = ProgressFromTo::create(3, 100, 0);
-        auto rollFunc = [&]()
-        {
+        auto rollFunc = [&](){
             canRoll = true;
         };
         auto rollfunc = CallFunc::create(rollFunc);
@@ -173,24 +167,23 @@ void Player::onMouseMove(Event* event)
 
     /* gain direction's animation */
     if (!keyMap[cocos2d::EventKeyboard::KeyCode::KEY_SPACE])
-        sprite->runAction(getAnimation(directString1, 5, 1, -1));
+        sprite->runAction(getAnimation(directString1, 5, 1, 1));
 }
 
 void Player::onMouseDown(Event* event)
 {
     EventMouse* e = (EventMouse*)event;
-    
+
     if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
     {
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 15; i++)
         {
-            if (playerBullet[i]->isActive == false)
+            if (pistolBullet[i]->isActive == false)
             {
-                playerBullet[i]->isActive = true;
-                playerBullet[i]->shoot(sprite->getPosition(), direct, 0.5);
-
+                pistolBullet[i]->isActive = true;
+                pistolBullet[i]->shoot(sprite->getPosition(), direct, 0.5);
                 break;
             }
-        }  
+        }
     }
 }

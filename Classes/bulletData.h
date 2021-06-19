@@ -16,8 +16,7 @@ public:
 	virtual bool init();
 	void bulletInit(Point position);
 	void shoot(Point position, float direction[2], float speed);
-	static Bullet* createBullet(Point position);
-	//void update(float delta);
+	//static Bullet* createBullet(Point position);
 
 	CREATE_FUNC(Bullet);
 };

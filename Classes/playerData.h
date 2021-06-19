@@ -4,7 +4,7 @@
 #define POBG_PLAYERDATE_H
 
 #include "cocos2d.h"
-#include "bulletData.h"
+#include "gunData.h"
 
 USING_NS_CC;
 
@@ -17,9 +17,11 @@ public:
     CREATE_FUNC(Player);
 
     Sprite* sprite;
-    Sprite* fallSprite;
+    Sprite* fallSprite;  
     bool isFall = true;
-    Bullet* playerBullet[30];
+    Gun* gun;
+    Bullet* pistolBullet[PISTOL_BULLET];
+    Bullet* rifleBullet[RIFLE_BULLET];
 
     virtual bool init();
     float direct[2] = {};                                   // Direction's X & Y
