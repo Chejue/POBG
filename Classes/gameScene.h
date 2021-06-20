@@ -24,7 +24,9 @@ public:
 
     bool isCanReach(float x, float y);
 
-    void update(float delta);
+    void update(float dt);
+
+    void timeCounter(float dt);
 
     void doPause();
 

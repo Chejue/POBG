@@ -6,6 +6,7 @@
 #include "playerData.h"
 #include "pauseLayer.h"
 #include "ui/CocosGUI.h"
+#include "string"
 
 bool gameScene::init() {
 
@@ -115,7 +116,7 @@ bool gameScene::init() {
     auto dispatcher = Director::getInstance()->getEventDispatcher();
     dispatcher->addEventListenerWithSceneGraphPriority(listenerKey, this);
 
-
+    this->schedule(CC_SCHEDULE_SELECTOR(gameScene::timeCounter), 1.0f);
     this->scheduleUpdate();
 
     return Scene::init();
@@ -138,7 +139,7 @@ bool gameScene::isCanReach(float x, float y) {
     return result;
 }
 
-void gameScene::update(float delta) {
+void gameScene::update(float dt) {
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
@@ -148,6 +149,25 @@ void gameScene::update(float delta) {
     Size mapTiledNum = map->getMapSize();
     Size tiledSize = map->getTileSize();
     Size mapSize = Size(mapTiledNum.width * tiledSize.width, mapTiledNum.height * tiledSize.height);
+
+    player->canMove = true;
+    if (player->keyMap[EventKeyboard::KeyCode::KEY_A]) {
+        if (!isCanReach(player->sprite->getPositionX() - 35, player->sprite->getPositionY())) {
+            player->canMove = false;
+        }
+    } else if (player->keyMap[EventKeyboard::KeyCode::KEY_W]) {
+        if (!isCanReach(player->sprite->getPositionX(), player->sprite->getPositionY() + 35)) {
+            player->canMove = false;
+        }
+    } else if (player->keyMap[EventKeyboard::KeyCode::KEY_S]) {
+        if (!isCanReach(player->sprite->getPositionX(), player->sprite->getPositionY() - 35)) {
+            player->canMove = false;
+        }
+    } else if (player->keyMap[EventKeyboard::KeyCode::KEY_D]) {
+        if (!isCanReach(player->sprite->getPositionX() + 35, player->sprite->getPositionY())) {
+            player->canMove = false;
+        }
+    }
 
 
     Vec2 deltaPos = Vec2(0, 0);
@@ -202,4 +222,42 @@ Vec2 gameScene::tileCoordForPosition(const Vec2 position) {
     return Vec2(x, y);
 }
 
+void gameScene::timeCounter(float dt) {
 
+    static auto timeLabel = Label::createWithTTF("Time: 00 : 00", "fonts//arial.ttf", 30);
+    timeLabel->setTextColor(Color4B::WHITE);
+    timeLabel->setPosition(100, 700);
+
+    static bool add = false;
+    if (!add) {
+        addChild(timeLabel);
+        add = true;
+    }
+
+    static int second = 0;
+    static int minute = 0;
+    std::string time = "Time: ";
+
+    second++;
+    if (second == 60) {
+        second = 0;
+        minute++;
+    }
+
+    if (minute >= 10) {
+        time += std::to_string(minute);
+    } else {
+        time += "0" + std::to_string(minute);
+    }
+
+    time += " : ";
+
+    if (second >= 10) {
+        time += std::to_string(second);
+    } else {
+        time += "0" + std::to_string(second);
+    }
+
+    timeLabel->setString(time);
+
+}
