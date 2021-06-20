@@ -16,16 +16,17 @@ class Gun : public cocos2d::Node
 public:
 	float direct[2] = {};
 	Sprite* collimator;
+	Sprite* reloading;
 
 	Sprite* pistol;
 	Sprite* rifle;
 
 	virtual bool init();
-	void pistolInit(Point position);
-	void rifleInit(Point position);
-	void setPosition(Point position, float direction[2]);
+	void pistolInit(Point position, bool visible);
+	void rifleInit(Point position, bool visible);
+	void setGun(Point position, float direction[2], int gunType);
+	void Gun::reloadAnimation();
 
-	void onMouseDown(Event* event);
 	void onMouseMove(Event* event);
 
 	CREATE_FUNC(Gun);

@@ -1,7 +1,8 @@
 // Created by ³ÂÆôÅô
 
 #include "playerData.h"
-#include "gunData.h"
+#include "AudioEngine.h"
+#include "settings.h"
 
 USING_NS_CC;
 
@@ -41,7 +42,8 @@ bool Player::init()
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
 
     gun = Gun::create();
-    gun->pistolInit(sprite->getPosition());
+    gun->pistolInit(sprite->getPosition(),false);
+    gun->rifleInit(sprite->getPosition(),false);
     addChild(gun);
 
     for (int i = 0; i < PISTOL_BULLET; i++)
@@ -49,6 +51,13 @@ bool Player::init()
         pistolBullet[i] = Bullet::create();
         pistolBullet[i]->bulletInit(Vec2(0, 0));
         addChild(pistolBullet[i]);
+    }
+
+    for (int i = 0; i < RIFLE_BULLET; i++)
+    {
+        rifleBullet[i] = Bullet::create();
+        rifleBullet[i]->bulletInit(Vec2(0, 0));
+        addChild(rifleBullet[i]);
     }
 
     this->scheduleUpdate();
@@ -78,45 +87,69 @@ Animate* Player::getAnimation(const char* direction, const int iMax, const int F
     return Animate::create(animation);
 }
 
+void Player::reload()
+{
+    if (canshoot)
+    {
+        canshoot = false;
+        auto reloadGunSound = AudioEngine::play2d("music//gunReload.mp3", false);
+        AudioEngine::setVolume(reloadGunSound, settings::getInstance().effectsVolume);
+        gun->reloadAnimation();
+
+        auto progressFromTo = ProgressFromTo::create(2, 100, 0);
+        auto loadDoneFunc = [&]() {
+            canshoot = true;
+            if (gunType == 1)
+                for (int i = 0; i < PISTOL_BULLET; i++)
+                    pistolBullet[i]->isActive = false;
+            if (gunType == 2)
+                for (int i = 0; i < RIFLE_BULLET; i++)
+                    rifleBullet[i]->isActive = false;
+        };
+        auto loadDone = CallFunc::create(loadDoneFunc);
+        Action* loading = Sequence::create(progressFromTo, loadDone, NULL);
+        sprite->runAction(loading);
+    }
+}
+
 void Player::update(float delta)
 {
     if (!isFall)
     {
         sprite->setVisible(true);
-        gun->setPosition(sprite->getPosition(), direct);
-    }
-    /* using keyboard to control player's moving */
-    auto A = cocos2d::EventKeyboard::KeyCode::KEY_A;
-    auto S = cocos2d::EventKeyboard::KeyCode::KEY_S;
-    auto D = cocos2d::EventKeyboard::KeyCode::KEY_D;
-    auto W = cocos2d::EventKeyboard::KeyCode::KEY_W;
+        gun->setGun(sprite->getPosition(), direct, gunType);
 
-    int X = 0, Y = 0;
-    if (!keyMap[cocos2d::EventKeyboard::KeyCode::KEY_SPACE])
-    {
-        if (keyMap[A])
-            X = -3;
-        if (keyMap[S])
-            Y = -3;
-        if (keyMap[D])
-            X = 3;
-        if (keyMap[W])
-            Y = 3;
-    }
-    if (X == 0 && Y == 0)
-        return;
+        /* using keyboard to control player's moving */
+        int X = 0, Y = 0;
+        if (!keyMap[cocos2d::EventKeyboard::KeyCode::KEY_SPACE] && canMove)
+        {
+            if (keyMap[cocos2d::EventKeyboard::KeyCode::KEY_A])
+                X = -3;
+            if (keyMap[cocos2d::EventKeyboard::KeyCode::KEY_S])
+                Y = -3;
+            if (keyMap[cocos2d::EventKeyboard::KeyCode::KEY_D])
+                X = 3;
+            if (keyMap[cocos2d::EventKeyboard::KeyCode::KEY_W])
+                Y = 3;
+        }
+        if (X == 0 && Y == 0)
+            return;
 
-    auto move = MoveTo::create(0.2, Vec2(sprite->getPositionX() + X, sprite->getPositionY() + Y));
-    sprite->runAction(move);
+        auto move = MoveTo::create(0.2, Vec2(sprite->getPositionX() + X, sprite->getPositionY() + Y));
+        sprite->runAction(move);
+    }
 }
 
 void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) 
 {
     keyMap[keyCode] = true;
+
     if (keyCode == EventKeyboard::KeyCode::KEY_SPACE && canRoll)
     {
         canRoll = false;
         sprite->stopAllActions();
+        auto changeGunSound = AudioEngine::play2d("music//roll.mp3", false);
+        AudioEngine::setVolume(changeGunSound, settings::getInstance().effectsVolume * 3);
         auto progressFromTo = ProgressFromTo::create(3, 100, 0);
         auto rollFunc = [&](){
             canRoll = true;
@@ -128,6 +161,22 @@ void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
         Spawn* spawn = Spawn::create(rollTo, rollAct, sequence, nullptr);
         sprite->runAction(spawn);
     }
+
+    if (keyCode == EventKeyboard::KeyCode::KEY_1)
+    {
+        auto changeGunSound = AudioEngine::play2d("music//changeGun.mp3", false);
+        AudioEngine::setVolume(changeGunSound, settings::getInstance().effectsVolume);
+        gunType = 1;
+    }
+    else if (keyCode == EventKeyboard::KeyCode::KEY_2)
+    {
+        auto changeGunSound = AudioEngine::play2d("music//changeGun.mp3", false);
+        AudioEngine::setVolume(changeGunSound, settings::getInstance().effectsVolume);
+        gunType = 2;
+    }
+
+    if (keyCode == EventKeyboard::KeyCode::KEY_R)
+        reload();
 }
 
 void Player::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event)
@@ -174,16 +223,27 @@ void Player::onMouseDown(Event* event)
 {
     EventMouse* e = (EventMouse*)event;
 
-    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
+    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT && canshoot)
     {
-        for (int i = 0; i < 15; i++)
-        {
-            if (pistolBullet[i]->isActive == false)
+        if(gunType==1)
+            for (int i = 0; i < PISTOL_BULLET; i++)
             {
-                pistolBullet[i]->isActive = true;
-                pistolBullet[i]->shoot(sprite->getPosition(), direct, 0.5);
-                break;
+                if (pistolBullet[i]->isActive == false)
+                {
+                    pistolBullet[i]->shoot(sprite->getPosition(), direct, 0.7);
+                    pistolBullet[i]->isActive = true;
+                    break;
+                }
             }
-        }
+        else if(gunType==2)
+            for (int i = 0; i < RIFLE_BULLET; i++)
+            {
+                if (rifleBullet[i]->isActive == false)
+                {
+                    rifleBullet[i]->shoot(sprite->getPosition(), direct, 0.4);
+                    rifleBullet[i]->isActive = true;
+                    break;
+                }
+            }
     }
 }

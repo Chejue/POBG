@@ -24,9 +24,9 @@ void Bullet::bulletInit(Point position)
 
 void Bullet::shoot(Point position, float direction[2], float speed)
 {
-	bullet->setPosition(position);
-	float shootX = 5.0f * direction[0] / speed;
-	float shootY = 5.0f * direction[1] / speed;
-	auto moveto = MoveTo::create(speed, Vec2(position.x + shootX, position.y + shootY));
-	bullet->runAction(moveto);
+		bullet->setPosition(position);
+		float shootX = 10.0f * direction[0];
+		float shootY = 10.0f * direction[1];
+		auto moveto = MoveTo::create(speed, Vec2(position.x + shootX, position.y + shootY));
+		bullet->runAction(moveto);
 }

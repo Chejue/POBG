@@ -19,9 +19,15 @@ public:
     Sprite* sprite;
     Sprite* fallSprite;  
     bool isFall = true;
+    bool canMove = true;
+    int HP = 100;
+
     Gun* gun;
+    int gunType = 1;
+    bool canshoot = true;
     Bullet* pistolBullet[PISTOL_BULLET];
     Bullet* rifleBullet[RIFLE_BULLET];
+    void reload();
 
     virtual bool init();
     float direct[2] = {};                                   // Direction's X & Y
@@ -30,7 +36,6 @@ public:
     std::map<cocos2d::EventKeyboard::KeyCode, bool> keyMap; // Record whether the KeyCode is pressed or not
     void update(float delta);
 
-private:
     bool canRoll = true;
 	Animate* getAnimation(const char* direction, const int iMax, const int F, const int times);
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
