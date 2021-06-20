@@ -8,6 +8,7 @@
 #include "ui/CocosGUI.h"
 
 bool gameScene::init() {
+
     AudioEngine::stop(settings::getInstance().backgroundAudioOfMenuID);
     settings::getInstance().bgmOfMenu_started = false;
     if (!settings::getInstance().bgmOfGaming_started) {
@@ -20,7 +21,8 @@ bool gameScene::init() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
 
     map = TMXTiledMap::create("map//Desert.tmx");
-    map->setPosition(-310, -240);
+    map->setPosition(-150, -240);
+    map->setScale(0.8);
     addChild(map);
 
     player = Player::create();
@@ -105,7 +107,6 @@ bool gameScene::init() {
                 gameScene::doPause();
                 break;
             }
-
             default:
                 break;
         }
@@ -113,6 +114,7 @@ bool gameScene::init() {
 
     auto dispatcher = Director::getInstance()->getEventDispatcher();
     dispatcher->addEventListenerWithSceneGraphPriority(listenerKey, this);
+
 
     this->scheduleUpdate();
 
@@ -125,7 +127,7 @@ bool gameScene::isCanReach(float x, float y) {
     auto boundariesLayer = map->getLayer("边界");
     auto obstaclesLayer = map->getLayer("装饰");
 
-    Vec2 mapPos;
+    Vec2 mapPos = tileCoordForPosition(Vec2(x, y));
 
     if (boundariesLayer->getTileGIDAt(mapPos) || obstaclesLayer->getTileGIDAt(mapPos)) {
         result = false;
@@ -146,6 +148,7 @@ void gameScene::update(float delta) {
     Size mapTiledNum = map->getMapSize();
     Size tiledSize = map->getTileSize();
     Size mapSize = Size(mapTiledNum.width * tiledSize.width, mapTiledNum.height * tiledSize.height);
+
 
     Vec2 deltaPos = Vec2(0, 0);
 
@@ -175,19 +178,8 @@ void gameScene::update(float delta) {
     auto mapPos = tileCoordForPosition(playerPosition);
 
 
-    for (int x = 0; x < 48; x++) {
-        for (int y = 0; y < 80; y++) {
-            if (boundariesLayer->getTileGIDAt(mapPos)!=0) {
-                CCLOG("%d", boundariesLayer->getTileGIDAt(Vec2(x, y)));
-            }
-            if (obstaclesLayer->getTileGIDAt(mapPos)!=0) {
-                CCLOG("%d", obstaclesLayer->getTileGIDAt(Vec2(x, y)));
-            }
-        }
-
-    }
-
     floorLayer->setTileGID(0, mapPos);*/
+
 
 }
 
@@ -201,11 +193,12 @@ void gameScene::doPause() {
 }
 
 // OpenGL坐标转成格子坐标
-Vec2 gameScene::tileCoordForPosition(const Vec2 &position) {
+Vec2 gameScene::tileCoordForPosition(const Vec2 position) {
     Size mapSize = map->getMapSize();
     Size tileSize = map->getTileSize();
-    int x = (position.x - map->getPositionX()) / 40;
-    int y = (mapSize.height * tileSize.height - position.y + map->getPositionY()) / tileSize.height + 1;
+    int x = (position.x - map->getPositionX()) / tileSize.width;
+    int y = (mapSize.height * tileSize.height - position.y + map->getPositionY()) / tileSize.height;
+
     return Vec2(x, y);
 }
 
