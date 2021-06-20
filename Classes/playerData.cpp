@@ -114,7 +114,7 @@ void Player::reload()
                     pistolBulletSum[1]--;
                 }
             }
-        else  if (gunType == 1 && pistolBulletSum[1] > 0)
+        else  if (gunType == 2)
             for (int i = 0; i < RIFLE_BULLET; i++)
             {
                 if (rifleBullet[i]->isActive == true)
@@ -241,7 +241,7 @@ void Player::onMouseDown(Event* event)
 {
     EventMouse* e = (EventMouse*)event;
 
-    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT && canShoot&& !isFall)
+    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT && canShoot && !isFall)
     {
         if(gunType==1)
             for (int i = 0; i < PISTOL_BULLET; i++)

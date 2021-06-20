@@ -30,6 +30,11 @@ bool gameScene::init() {
     Vec2 position = player->sprite->getPosition();
     addChild(player);
 
+    enemy = Enemy::create();
+    enemy->enemyInit(Vec2(640, 500), 1);    //for test
+    addChild(enemy);
+    schedule(SEL_SCHEDULE(&gameScene::enemyUpdate), 0.2f);
+
     auto rifleBulletPic = Sprite::create("res//rifle_Bullet.png");
     rifleBulletPic->setPosition(30, 60);
     rifleBulletPic->setScale(0.6);
@@ -79,7 +84,7 @@ bool gameScene::init() {
 
     auto rifleBulletBar = LoadingBar::create("res//rifleBulletBar.png");
     rifleBulletBar->setDirection(LoadingBar::Direction::LEFT);
-    rifleBulletBar->::gameScene::setPosition(155, 60);
+    rifleBulletBar->setPosition(Vec2(155, 60));
     rifleBulletBar->setScaleX(0.5);
     rifleBulletBar->setScaleY(0.7);
     rifleBulletBar->setPercent(100);
@@ -87,7 +92,7 @@ bool gameScene::init() {
 
     auto pistolBulletBar = LoadingBar::create("res//pistolBulletBar.png");
     pistolBulletBar->setDirection(LoadingBar::Direction::LEFT);
-    pistolBulletBar->::gameScene::setPosition(155, 20);
+    pistolBulletBar->setPosition(Vec2(155, 20));
     pistolBulletBar->setScaleX(0.5);
     pistolBulletBar->setScaleY(0.7);
     pistolBulletBar->setPercent(100);
@@ -95,7 +100,7 @@ bool gameScene::init() {
 
     auto healthBar = LoadingBar::create("res//healthBar.png");
     healthBar->setDirection(LoadingBar::Direction::RIGHT);
-    healthBar->::gameScene::setPosition(640, 40);
+    healthBar->setPosition(Vec2(640, 40));
     healthBar->setScaleX(0.6);
     healthBar->setScaleY(0.6);
     healthBar->setPercent(100);
@@ -200,7 +205,6 @@ void gameScene::update(float dt) {
 
     floorLayer->setTileGID(0, mapPos);*/
 
-
 }
 
 void gameScene::doPause() {
@@ -260,4 +264,17 @@ void gameScene::timeCounter(float dt) {
 
     timeLabel->setString(time);
 
+}
+
+void gameScene::enemyUpdate(float dt)
+{
+    enemy->move(player->sprite->getPosition());
+    enemy->shoot(player->sprite->getPosition());
+    float xDir = enemy->enemy->getPositionX() + enemy->direct[0] / 50;
+    float yDir = enemy->enemy->getPositionY() + enemy->direct[1] / 50;
+    if (!isCanReach(xDir, yDir)) {
+        enemy->canMove = false;
+    }
+    else
+        enemy->canMove = true;
 }

@@ -9,6 +9,7 @@ USING_NS_CC;
 
 #include "ui/CocosGUI.h"
 #include "playerData.h"
+#include "enemyData.h"
 
 using namespace ui;
 
@@ -21,6 +22,7 @@ public:
 
     TMXTiledMap *map;
     Player *player;
+    Enemy* enemy;
 
     bool isCanReach(float x, float y);
 
@@ -29,6 +31,8 @@ public:
     void timeCounter(float dt);
 
     void doPause();
+
+    void gameScene::enemyUpdate(float dt);
 
 private:
 
