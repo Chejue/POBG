@@ -32,7 +32,25 @@ public:
 
     void doPause();
 
-    void gameScene::enemyUpdate(float dt);
+    void rollCD();
+
+    int chapter = 1;
+    int second = 0;
+    int minute = 0;
+    int score = 0;
+
+    Label *timeLabel = Label::createWithTTF("Time   00 : 00", "fonts//arial.ttf", 30);
+    Label *numOfHealth = Label::createWithTTF("100", "fonts//arial.ttf", 21);
+    Label *numOfPistolBullet = Label::createWithTTF("0", "fonts//arial.ttf", 21);
+    Label *numOfRifleBullet = Label::createWithTTF("0", "fonts//arial.ttf", 21);
+    Label *chapterLabel = Label::createWithTTF("CHAPTER  1", "fonts//arial.ttf", 30);
+
+    LoadingBar *rifleBulletBar = LoadingBar::create("res//rifleBulletBar.png");
+    LoadingBar *pistolBulletBar = LoadingBar::create("res//pistolBulletBar.png");
+    LoadingBar *healthBar = LoadingBar::create("res//healthBar.png");
+
+    Sprite *rollCDBar = Sprite::create("res//rollCDBar.png");
+    ProgressTimer *rollTimer = ProgressTimer::create(rollCDBar);
 
 private:
 
