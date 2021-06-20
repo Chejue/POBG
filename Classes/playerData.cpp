@@ -49,14 +49,14 @@ bool Player::init()
     for (int i = 0; i < PISTOL_BULLET; i++)
     {
         pistolBullet[i] = Bullet::create();
-        pistolBullet[i]->bulletInit(Vec2(0, 0));
+        pistolBullet[i]->bulletInit(Vec2(0, 0),0);
         addChild(pistolBullet[i]);
     }
 
     for (int i = 0; i < RIFLE_BULLET; i++)
     {
         rifleBullet[i] = Bullet::create();
-        rifleBullet[i]->bulletInit(Vec2(0, 0));
+        rifleBullet[i]->bulletInit(Vec2(0, 0),0);
         addChild(rifleBullet[i]);
     }
 
@@ -110,6 +110,7 @@ void Player::reload()
                 if (pistolBullet[i]->isActive == true)
                 {
                     pistolBullet[i]->isActive = false;
+                    pistolBulletSum[0]++;
                     pistolBulletSum[1]--;
                 }
             }
@@ -119,6 +120,7 @@ void Player::reload()
                 if (rifleBullet[i]->isActive == true)
                 {
                     rifleBullet[i]->isActive = false;
+                    rifleBulletSum[0]++;
                     rifleBulletSum[1]--;
                 }
             }
@@ -239,7 +241,7 @@ void Player::onMouseDown(Event* event)
 {
     EventMouse* e = (EventMouse*)event;
 
-    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT && canShoot)
+    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT && canShoot&& !isFall)
     {
         if(gunType==1)
             for (int i = 0; i < PISTOL_BULLET; i++)

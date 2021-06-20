@@ -16,10 +16,14 @@ bool Bullet::init()
 	return true;
 }
 
-void Bullet::bulletInit(Point position)
+/* type: player 0; enemy 1 */
+void Bullet::bulletInit(Point position,bool type)
 {
 	isActive = false;
-	bullet = Sprite::create("gun\\bullet.png");
+	if (!type)
+		bullet = Sprite::create("gun\\bullet.png");
+	else
+		bullet = Sprite::create("gun\\enemyBullet.png");
 	bullet->setPosition(position);
 	addChild(bullet);
 }
