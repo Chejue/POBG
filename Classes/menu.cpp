@@ -58,7 +58,7 @@ bool menu::init() {
     return Scene::init();
 }
 
-void menu::enterModeScene(Ref *sender) {
+/*void menu::enterModeScene(Ref *sender) {
     if (!settings::getInstance().silenced) {
         auto buttonClickedSound = AudioEngine::play2d("music//button_clicked.mp3", false);
         AudioEngine::setVolume(buttonClickedSound, settings::getInstance().effectsVolume);
@@ -66,7 +66,7 @@ void menu::enterModeScene(Ref *sender) {
     auto modeScene = modeScene::create();
     auto transitionScene = TransitionFade::create(0.5f, modeScene);
     Director::getInstance()->replaceScene(transitionScene);
-}
+}*/
 
 void menu::enterGameScene(Ref *sender) {
     if (!settings::getInstance().silenced) {
@@ -75,7 +75,7 @@ void menu::enterGameScene(Ref *sender) {
     }
     auto gameScene = gameScene::create();
     auto transitionScene = TransitionFade::create(0.5f, gameScene);
-    Director::getInstance()->replaceScene(transitionScene);
+    Director::getInstance()->pushScene(transitionScene);
 }
 
 void menu::enterSettingsScene(Ref *sender) {

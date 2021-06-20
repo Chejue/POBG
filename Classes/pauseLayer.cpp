@@ -51,12 +51,13 @@ void pauseLayer::resumeCallback(Ref *sender) {
 }
 
 void pauseLayer::settingsCallback(Ref *sender) {
-    Director::getInstance()->replaceScene(settingsScene::create());
+    Director::getInstance()->pushScene(settingsScene::create());
 }
 
 void pauseLayer::quitCallback(Ref *sender) {
     AudioEngine::stop(settings::getInstance().backgroundAudioOfGamingID);
     settings::getInstance().bgmOfGaming_started = false;
-    Director::getInstance()->replaceScene(menu::create());
+    Director::getInstance()->popScene();
+    Director::getInstance()->popScene();
 }
 

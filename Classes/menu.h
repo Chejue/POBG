@@ -25,6 +25,7 @@ public:
 
     void menuClose(Ref *sender);
 
+    int highestScore = 0;
 
 private:
 
