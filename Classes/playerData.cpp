@@ -49,14 +49,14 @@ bool Player::init()
     for (int i = 0; i < PISTOL_BULLET; i++)
     {
         pistolBullet[i] = Bullet::create();
-        pistolBullet[i]->bulletInit(Vec2(0, 0));
+        pistolBullet[i]->bulletInit(Vec2(0, 0),0);
         addChild(pistolBullet[i]);
     }
 
     for (int i = 0; i < RIFLE_BULLET; i++)
     {
         rifleBullet[i] = Bullet::create();
-        rifleBullet[i]->bulletInit(Vec2(0, 0));
+        rifleBullet[i]->bulletInit(Vec2(0, 0),0);
         addChild(rifleBullet[i]);
     }
 
@@ -89,27 +89,45 @@ Animate* Player::getAnimation(const char* direction, const int iMax, const int F
 
 void Player::reload()
 {
-    if (canshoot)
-    {
-        canshoot = false;
-        auto reloadGunSound = AudioEngine::play2d("music//gunReload.mp3", false);
-        AudioEngine::setVolume(reloadGunSound, settings::getInstance().effectsVolume);
-        gun->reloadAnimation();
+    if (!canShoot)
+        return;
+    if (gunType == 1 && pistolBulletSum[0] <= 0 && pistolBulletSum[1] <= 0)
+        return;
+    if (gunType == 2 && rifleBullet[0] <= 0 && rifleBullet[1] <= 0)
+        return;
 
-        auto progressFromTo = ProgressFromTo::create(2, 100, 0);
-        auto loadDoneFunc = [&]() {
-            canshoot = true;
-            if (gunType == 1)
-                for (int i = 0; i < PISTOL_BULLET; i++)
+    canShoot = false;
+    auto reloadGunSound = AudioEngine::play2d("music//gunReload.mp3", false);
+    AudioEngine::setVolume(reloadGunSound, settings::getInstance().effectsVolume);
+    gun->reloadAnimation();
+
+    auto progressFromTo = ProgressFromTo::create(2, 100, 0);
+    auto loadDoneFunc = [&]() {
+        canShoot = true;
+        if (gunType == 1)
+            for (int i = 0; i < PISTOL_BULLET; i++)
+            {
+                if (pistolBullet[i]->isActive == true)
+                {
                     pistolBullet[i]->isActive = false;
-            if (gunType == 2)
-                for (int i = 0; i < RIFLE_BULLET; i++)
+                    pistolBulletSum[0]++;
+                    pistolBulletSum[1]--;
+                }
+            }
+        else  if (gunType == 1 && pistolBulletSum[1] > 0)
+            for (int i = 0; i < RIFLE_BULLET; i++)
+            {
+                if (rifleBullet[i]->isActive == true)
+                {
                     rifleBullet[i]->isActive = false;
-        };
-        auto loadDone = CallFunc::create(loadDoneFunc);
-        Action* loading = Sequence::create(progressFromTo, loadDone, NULL);
-        sprite->runAction(loading);
-    }
+                    rifleBulletSum[0]++;
+                    rifleBulletSum[1]--;
+                }
+            }
+    };
+    auto loadDone = CallFunc::create(loadDoneFunc);
+    Action* loading = Sequence::create(progressFromTo, loadDone, NULL);
+    sprite->runAction(loading);
 }
 
 void Player::update(float delta)
@@ -223,15 +241,16 @@ void Player::onMouseDown(Event* event)
 {
     EventMouse* e = (EventMouse*)event;
 
-    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT && canshoot)
+    if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT && canShoot&& !isFall)
     {
         if(gunType==1)
             for (int i = 0; i < PISTOL_BULLET; i++)
             {
                 if (pistolBullet[i]->isActive == false)
                 {
-                    pistolBullet[i]->shoot(sprite->getPosition(), direct, 0.7);
+                    pistolBullet[i]->shoot(sprite->getPosition(), direct, 1.0f);
                     pistolBullet[i]->isActive = true;
+                    pistolBulletSum[0]--;
                     break;
                 }
             }
@@ -240,8 +259,9 @@ void Player::onMouseDown(Event* event)
             {
                 if (rifleBullet[i]->isActive == false)
                 {
-                    rifleBullet[i]->shoot(sprite->getPosition(), direct, 0.4);
+                    rifleBullet[i]->shoot(sprite->getPosition(), direct, 0.5f);
                     rifleBullet[i]->isActive = true;
+                    rifleBulletSum[0]--;
                     break;
                 }
             }
