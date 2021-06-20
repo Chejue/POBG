@@ -30,6 +30,8 @@ public:
 
 private:
 
+    Vec2 tileCoordForPosition(const Vec2 &position);
+
 };
 
 
