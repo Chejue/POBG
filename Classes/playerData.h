@@ -24,9 +24,11 @@ public:
 
     Gun* gun;
     int gunType = 1;
-    bool canshoot = true;
+    bool canShoot = true;
     Bullet* pistolBullet[PISTOL_BULLET];
     Bullet* rifleBullet[RIFLE_BULLET];
+    int pistolBulletSum[2] = { PISTOL_BULLET,100 };
+    int rifleBulletSum[2] = { RIFLE_BULLET,300 };
     void reload();
 
     virtual bool init();
