@@ -12,11 +12,10 @@ class Bullet : public cocos2d::Node
 public:
 	bool isActive;
 	Sprite* bullet;
-
+	
 	virtual bool init();
 	void bulletInit(Point position, bool type);
 	void shoot(Point position, float direction[2], float speed);
-	//static Bullet* createBullet(Point position);
 
 	CREATE_FUNC(Bullet);
 };
