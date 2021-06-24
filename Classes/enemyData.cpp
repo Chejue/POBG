@@ -6,6 +6,8 @@
 
 USING_NS_CC;
 
+#define sprintf_s sprintf
+
 bool Enemy::init()
 {
     if (!Node::init()) {
@@ -93,13 +95,13 @@ void Enemy::move(Point position)
     if (canMove)
     {
         if (xDir < 0)
-            X = -20;
+            X = -5;
         if (yDir < 0)
-            Y = -20;
+            Y = -5;
         if (xDir > 0)
-            X = 20;
+            X = 5;
         if (yDir > 0)
-            Y = 20;
+            Y = 5;
     }
 
     if (X == 0 && Y == 0)
@@ -160,7 +162,7 @@ void Enemy::shoot(Point position)
                     rifleBullet[i]->shoot(enemy->getPosition(), direct, 1.0f);
                     rifleBullet[i]->isActive = true;
 
-                    auto progressFromTo = ProgressFromTo::create(2, 100, 0);
+                    auto progressFromTo = ProgressFromTo::create(1, 100, 0);
                     auto shootStopFunc = [&]() {
                         canShoot = true;
                     };

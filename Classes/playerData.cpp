@@ -6,6 +6,8 @@
 
 USING_NS_CC;
 
+#define sprintf_s sprintf
+
 bool Player::init()
 {
     /* opening falling animation */
@@ -93,7 +95,7 @@ void Player::reload()
         return;
     if (gunType == 1 && pistolBulletSum[0] <= 0 && pistolBulletSum[1] <= 0)
         return;
-    if (gunType == 2 && rifleBullet[0] <= 0 && rifleBullet[1] <= 0)
+    if (gunType == 2 && rifleBulletSum[0] <= 0 && rifleBulletSum[1] <= 0)
         return;
 
     canShoot = false;
@@ -110,6 +112,7 @@ void Player::reload()
                 if (pistolBullet[i]->isActive == true)
                 {
                     pistolBullet[i]->isActive = false;
+                    pistolBullet[i]->crashed = false;
                     pistolBulletSum[0]++;
                     pistolBulletSum[1]--;
                 }
@@ -120,6 +123,7 @@ void Player::reload()
                 if (rifleBullet[i]->isActive == true)
                 {
                     rifleBullet[i]->isActive = false;
+                    rifleBullet[i]->crashed = false;
                     rifleBulletSum[0]++;
                     rifleBulletSum[1]--;
                 }
@@ -158,7 +162,7 @@ void Player::update(float delta)
     }
 }
 
-void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) 
+void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event)
 {
     keyMap[keyCode] = true;
 

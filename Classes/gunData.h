@@ -25,7 +25,7 @@ public:
 	void pistolInit(Point position, bool visible);
 	void rifleInit(Point position, bool visible);
 	void setGun(Point position, float direction[2], int gunType);
-	void Gun::reloadAnimation();
+	void reloadAnimation();
 
 	void onMouseMove(Event* event);
 

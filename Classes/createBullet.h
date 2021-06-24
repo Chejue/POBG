@@ -1,4 +1,4 @@
-// Created by ³ÂÆôÅô
+// Created by é™ˆå¯é¹
 
 #ifndef POBG_createBullet_H
 #define POBG_createBullet_H
@@ -11,12 +11,12 @@ class createBullet : public cocos2d::Node
 {
 public:
 
-	Sprite* bullet;
+    Sprite* bullet;
 
-	virtual bool init();
-	void bulletInit(Point position, int type);
-	
-	CREATE_FUNC(createBullet);
+    virtual bool init();
+    void bulletInit(Point position, int type);
+
+    CREATE_FUNC(createBullet);
 };
 
 #endif //POBG_createBullet_H

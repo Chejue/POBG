@@ -5,8 +5,11 @@
 #include "AudioEngine.h"
 #include "playerData.h"
 #include "pauseLayer.h"
+#include "gameEndLayer.h"
+#include "createBullet.h"
 #include "ui/CocosGUI.h"
 #include "string"
+#include <time.h>
 
 bool gameScene::init() {
 
@@ -30,20 +33,24 @@ bool gameScene::init() {
     Vec2 position = player->sprite->getPosition();
     addChild(player);
 
-    enemy = Enemy::create();
-    enemy->enemyInit(Vec2(640, 500), 1);    //for test
-    addChild(enemy);
-    schedule(SEL_SCHEDULE(&gameScene::enemyUpdate), 0.2f);
 
-    auto rifleBulletPic = Sprite::create("res//rifle_Bullet.png");
-    rifleBulletPic->setPosition(30, 60);
-    rifleBulletPic->setScale(0.6);
-    addChild(rifleBulletPic);
+    auto rifleBulletPic1 = Sprite::create("res//rifle_Bullet.png");
+    rifleBulletPic1->setPosition(30, 60);
+    rifleBulletPic1->setScale(0.6);
+    addChild(rifleBulletPic1);
 
-    auto pistolBulletPic = Sprite::create("res//pistol_Bullet.png");
-    pistolBulletPic->setPosition(30, 20);
-    pistolBulletPic->setScale(0.6);
-    addChild(pistolBulletPic);
+    rifleBulletPic2->setPosition(565, 90);
+    rifleBulletPic2->setScale(0.6);
+    addChild(rifleBulletPic2, 2);
+
+    auto pistolBulletPic1 = Sprite::create("res//pistol_Bullet.png");
+    pistolBulletPic1->setPosition(30, 20);
+    pistolBulletPic1->setScale(0.6);
+    addChild(pistolBulletPic1);
+
+    pistolBulletPic2->setPosition(565, 90);
+    pistolBulletPic2->setScale(0.6);
+    addChild(pistolBulletPic2, 2);
 
     auto timeFrame = Sprite::create("res//frame1.png");
     timeFrame->setPosition(150, 670);
@@ -51,11 +58,10 @@ bool gameScene::init() {
     timeFrame->setScale(0.8);
     addChild(timeFrame, 1);
 
-    auto restEnemyFrame = Sprite::create("res//frame1.png");
+    auto restEnemyFrame = Sprite::create("res//frame3.png");
     restEnemyFrame->setPosition(1130, 670);
     restEnemyFrame->setOpacity(90);
     restEnemyFrame->setScale(0.8);
-    restEnemyFrame->setFlippedX(true);
     addChild(restEnemyFrame, 1);
 
     auto rifleBulletFrame = Sprite::create("res//frame.png");
@@ -103,40 +109,68 @@ bool gameScene::init() {
     timeLabel->setPosition(145, 670);
     addChild(timeLabel, 2);
 
+    numOfEnemy->setTextColor(Color4B::WHITE);
+    numOfEnemy->setPosition(1135, 670);
+    addChild(numOfEnemy, 2);
+
     numOfRifleBullet->setPosition(65, 60);
-    numOfRifleBullet->setTextColor(Color4B::WHITE);
+    numOfRifleBullet->setTextColor(Color4B::BLACK);
     numOfRifleBullet->enableOutline(Color4B::BLACK);
     numOfRifleBullet->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
     addChild(numOfRifleBullet, 2);
 
     numOfPistolBullet->setPosition(65, 20);
-    numOfPistolBullet->setTextColor(Color4B::WHITE);
+    numOfPistolBullet->setTextColor(Color4B::BLACK);
     numOfPistolBullet->enableOutline(Color4B::BLACK);
     numOfPistolBullet->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
     addChild(numOfPistolBullet, 2);
 
+    numOfRifleBullet1->setPosition(630, 70);
+    numOfRifleBullet1->setTextColor(Color4B::WHITE);
+    numOfRifleBullet1->enableOutline(Color4B::BLACK);
+    numOfRifleBullet1->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    addChild(numOfRifleBullet1, 2);
+
+    numOfPistolBullet1->setPosition(630, 70);
+    numOfPistolBullet1->setTextColor(Color4B::WHITE);
+    numOfPistolBullet1->enableOutline(Color4B::BLACK);
+    numOfPistolBullet1->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    addChild(numOfPistolBullet1, 2);
+
+    numOfRifleBullet2->setPosition(700, 70);
+    numOfRifleBullet2->setTextColor(Color4B::WHITE);
+    numOfRifleBullet2->enableOutline(Color4B::BLACK);
+    numOfRifleBullet2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    addChild(numOfRifleBullet2, 2);
+
+    numOfPistolBullet2->setPosition(700, 70);
+    numOfPistolBullet2->setTextColor(Color4B::WHITE);
+    numOfPistolBullet2->enableOutline(Color4B::BLACK);
+    numOfPistolBullet2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    addChild(numOfPistolBullet2, 2);
+
     numOfHealth->setPosition(530, 20);
-    numOfHealth->setTextColor(Color4B::WHITE);
+    numOfHealth->setTextColor(Color4B::BLACK);
     numOfHealth->enableOutline(Color4B::BLACK);
     numOfHealth->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
     addChild(numOfHealth, 2);
 
     rifleBulletBar->setDirection(LoadingBar::Direction::LEFT);
-    rifleBulletBar->setPosition(Vec2(155, 60));
+    rifleBulletBar->::gameScene::setPosition(155, 60);
     rifleBulletBar->setScaleX(0.5);
     rifleBulletBar->setScaleY(0.7);
     rifleBulletBar->setPercent(100);
     addChild(rifleBulletBar, 1);
 
     pistolBulletBar->setDirection(LoadingBar::Direction::LEFT);
-    pistolBulletBar->setPosition(Vec2(155, 20));
+    pistolBulletBar->::gameScene::setPosition(155, 20);
     pistolBulletBar->setScaleX(0.5);
     pistolBulletBar->setScaleY(0.7);
     pistolBulletBar->setPercent(100);
     addChild(pistolBulletBar, 1);
 
-    healthBar->setDirection(LoadingBar::Direction::RIGHT);
-    healthBar->setPosition(Vec2(640, 40));
+    healthBar->setDirection(LoadingBar::Direction::LEFT);
+    healthBar->::gameScene::setPosition(640, 20);
     healthBar->setScaleX(0.6);
     healthBar->setScaleY(0.6);
     healthBar->setPercent(100);
@@ -161,7 +195,7 @@ bool gameScene::init() {
                 break;
             }
             case EventKeyboard::KeyCode::KEY_SPACE: {
-                    gameScene::rollCD();
+                gameScene::rollCD();
                 break;
             }
             default:
@@ -173,8 +207,12 @@ bool gameScene::init() {
     dispatcher->addEventListenerWithSceneGraphPriority(listenerKeyEsc, this);
 
     this->schedule(CC_SCHEDULE_SELECTOR(gameScene::timeCounter), 1.0f);
-    //this->schedule(CC_SCHEDULE_SELECTOR(gameScene::rollCD), 3.0f);
+    this->schedule(CC_SCHEDULE_SELECTOR(gameScene::enemyCounter), 0.5f);
+    this->schedule(CC_SCHEDULE_SELECTOR(gameScene::damageOfCollisionUpdate), 0.5f);
+    this->schedule(CC_SCHEDULE_SELECTOR(gameScene::damageOfBulletUpdate), 0);
     this->scheduleUpdate();
+
+    nextChapter();
 
     return Scene::init();
 }
@@ -202,9 +240,32 @@ void gameScene::update(float dt) {
 
     auto playerPosition = player->sprite->getPosition();
 
+    if (player->gunType == 1) {
+        rifleBulletPic2->setVisible(false);
+        numOfRifleBullet1->setVisible(false);
+        numOfRifleBullet2->setVisible(false);
+
+        pistolBulletPic2->setVisible(true);
+        numOfPistolBullet1->setVisible(true);
+        numOfPistolBullet2->setVisible(true);
+    } else if (player->gunType == 2) {
+        pistolBulletPic2->setVisible(false);
+        numOfPistolBullet1->setVisible(false);
+        numOfPistolBullet2->setVisible(false);
+
+        rifleBulletPic2->setVisible(true);
+        numOfRifleBullet1->setVisible(true);
+        numOfRifleBullet2->setVisible(true);
+    }
+
+
     numOfPistolBullet->setString(std::to_string(player->pistolBulletSum[1]));
     numOfRifleBullet->setString(std::to_string(player->rifleBulletSum[1]));
     numOfHealth->setString(std::to_string(player->HP));
+    numOfPistolBullet1->setString(std::to_string(player->pistolBulletSum[0]));
+    numOfPistolBullet2->setString(std::to_string(player->pistolBulletSum[1]));
+    numOfRifleBullet1->setString(std::to_string(player->rifleBulletSum[0]));
+    numOfRifleBullet2->setString(std::to_string(player->rifleBulletSum[1]));
 
     pistolBulletBar->setPercent(player->pistolBulletSum[1] * 100 / player->pistolBulletSum[2]);
     rifleBulletBar->setPercent(player->rifleBulletSum[1] * 100 / player->rifleBulletSum[2]);
@@ -251,7 +312,40 @@ void gameScene::update(float dt) {
 
     map->setPosition(map->getPosition() + deltaPos);
 
+    if (chapterStarted && enemy.empty() && chapter <= 3) {
+        chapterStarted = false;
+    }
+    if (!chapterStarted && enemy.empty() && chapter <= 3) {
+        if (playerPosition.y >= 550)
+            nextChapter();
+    }
+
+    if (chapterStarted && enemy.empty() && chapter >= 4) {
+        gameEnd(true);
+    }
+
+    healthBar->setPercent(player->HP);
+    numOfHealth->setString(std::to_string(player->HP));
+
+    if (player->HP <= 0) {
+        gameEnd(false);
+    }
+
 }
+
+void gameScene::enemyUpdate(float dt) {
+    for (auto &e:enemy) {
+        e->move(player->sprite->getPosition());
+        e->shoot(player->sprite->getPosition());
+        float xDir = e->getPositionX() + e->direct[0] / 50;
+        float yDir = e->getPositionY() + e->direct[1] / 50;
+        if (!isCanReach(xDir, yDir)) {
+            e->canMove = false;
+        } else
+            e->canMove = true;
+    }
+}
+
 
 void gameScene::doPause() {
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -300,6 +394,14 @@ void gameScene::timeCounter(float dt) {
 
 }
 
+void gameScene::enemyCounter(float dt) {
+
+    std::string enemyNum = "  ";
+    enemyNum += std::to_string(enemy.size());
+    enemyNum += "     Enemy";
+    numOfEnemy->setString(enemyNum);
+}
+
 void gameScene::rollCD() {
     if (!player->canRoll) {
         rollTimer->setPercentage(0.0f);
@@ -307,4 +409,121 @@ void gameScene::rollCD() {
     }
 
 }
+
+void gameScene::damageOfCollisionUpdate(float dt) {
+    for (auto &e:enemy) {
+        if (player->sprite->getBoundingBox().intersectsRect(e->enemy->getBoundingBox())) {
+            player->HP -= 10;
+        }
+
+        if (player->HP < 0)
+            player->HP = 0;
+
+    }
+}
+
+void gameScene::gameEnd(bool isWin) {
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    RenderTexture *renderTexture = RenderTexture::create(visibleSize.width, visibleSize.height);
+    renderTexture->begin();
+    Director::getInstance()->getRunningScene()->visit();
+    renderTexture->end();
+    Director::getInstance()->pushScene(gameEndLayer::createScene(renderTexture, isWin));
+}
+
+void gameScene::nextChapter() {
+    chapterStarted = true;
+    srand((unsigned) time(NULL));
+    chapter++;
+    chapterLabel->setString("CHAPTER  " + std::to_string(chapter));
+    auto mapLayer = map->getLayer("地面");
+
+    int enemyNum = 0;
+    int minX = 6;
+    int maxX = 24;
+    int minY;
+    int maxY;
+
+    if (chapter == 1) {
+        minY = 65;
+        maxY = 76;
+        enemyNum = 3;
+    } else if (chapter == 2) {
+        minY = 60;
+        maxY = 65;
+        enemyNum = 5;
+    } else if (chapter == 3) {
+        minY = 65;
+        maxY = 70;
+        enemyNum = 7;
+    } else if (chapter == 4) {
+        minY = 65;
+        maxY = 70;
+        enemyNum = 1;
+    }
+
+
+    for (int enemyPos = 0; enemyPos < enemyNum; enemyPos++) {
+        int x = (rand() % (maxX - minX + 1)) + minX;
+        int y = (rand() % (maxY - minY + 1)) + minY;
+        //CCLOG("%d %d", x, y);
+        enemy.pushBack(Enemy::create());
+        enemy.back()->enemyInit(mapLayer->getPositionAt(Vec2(x, y)), 1);
+        addChild(enemy.back());
+        schedule(SEL_SCHEDULE(&gameScene::enemyUpdate), 0.2f);
+    }
+
+    auto bulletBonus = createBullet::create();
+    bulletBonus->bulletInit(Vec2(640, 360), 1);
+
+
+}
+
+void gameScene::damageOfBulletUpdate(float dt) {
+    for (auto &e:enemy) {
+        for (auto &p:player->pistolBullet) {
+            if (p->bullet->getBoundingBox().intersectsRect(e->enemy->getBoundingBox()) && !p->crashed) {
+                p->crashed = true;
+                player->HP -= 1;
+                e->HP -= 20;
+                removeChild(p);
+            }
+        }
+        for (auto &p:player->rifleBullet) {
+            if (p->bullet->getBoundingBox().intersectsRect(e->enemy->getBoundingBox()) && !p->crashed) {
+                p->crashed = true;
+                player->HP -= 2;
+                e->HP -= 40;
+                removeChild(p);
+            }
+        }
+
+        if (e->HP <= 0) {
+            e->survive = false;
+            if (!e->survive) {
+                removeChild(e);
+                enemy.erase(enemy.find(e));
+            }
+        }
+
+    }
+
+    /*for (auto &p:e->pistolBullet) {
+        if (p->bullet->getBoundingBox().intersectsRect(player->sprite->getBoundingBox())) {
+            player->HP -= 10;
+        }
+    }
+    for (auto &p:e->rifleBullet) {
+        if (p->bullet->getBoundingBox().intersectsRect(player->sprite->getBoundingBox())) {
+            player->HP -= 20;
+        }
+    }*/
+
+
+    if (player->HP < 0)
+        player->HP = 0;
+
+}
+
+
 

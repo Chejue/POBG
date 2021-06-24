@@ -1,6 +1,7 @@
 // Created by ³ÂÆôÅô
 
 #include "gunData.h"
+#define sprintf_s sprintf
 
 USING_NS_CC;
 
@@ -9,8 +10,8 @@ bool Gun::init()
 	if (!Node::init())
 		return false;
 
-    collimator= Sprite::create("gun\\collimator.png");
-    reloading= Sprite::create("gun\\gunReloading.png");
+    collimator= Sprite::create("gun//collimator.png");
+    reloading= Sprite::create("gun//gunReloading.png");
     collimator->setScale(0.2f);
     reloading->setScale(0.2f);
     reloading->setVisible(false);
@@ -74,13 +75,13 @@ void Gun::setGun(Point position,float direction[2],int gunType)
         gunName = "rifle";
     }
     if (direction[0] >= 0 && direction[1] >= 0)
-        sprintf_s(str, "gun\\%s %d.png", gunName, 1);
+        sprintf_s(str, "gun//%s %d.png", gunName, 1);
     else if (direction[0] > 0 && direction[1] < 0)
-        sprintf_s(str, "gun\\%s %d.png", gunName, 2);
+        sprintf_s(str, "gun//%s %d.png", gunName, 2);
     else if (direction[0] < 0 && direction[1] >0)
-        sprintf_s(str, "gun\\%s %d.png", gunName, 3);
+        sprintf_s(str, "gun//%s %d.png", gunName, 3);
     else if (direction[0] <= 0 && direction[1] <= 0)
-        sprintf_s(str, "gun\\%s %d.png", gunName, 4);
+        sprintf_s(str, "gun//%s %d.png", gunName, 4);
 
     if (gunType == 1)
         pistol->setTexture(str);

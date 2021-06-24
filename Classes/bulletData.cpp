@@ -34,7 +34,9 @@ void Bullet::shoot(Point position, float direction[2], float speed)
 	float shootX = 10.0f * direction[0];
 	float shootY = 10.0f * direction[1];
 	auto moveto = MoveTo::create(speed, Vec2(position.x + shootX, position.y + shootY));
-	bullet->runAction(moveto); 
+	/*auto progressFromTo = ProgressFromTo::create(0.5, 100, 0);
+	Action* shooting = Sequence::create(moveto, progressFromTo, NULL);*/
+	bullet->runAction(moveto);
 
 	auto reloadGunSound = AudioEngine::play2d("music//shoot.mp3", false);
 	AudioEngine::setVolume(reloadGunSound, settings::getInstance().effectsVolume);
